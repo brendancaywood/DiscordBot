@@ -1,8 +1,5 @@
-import discord
 from discord.ext.commands import Bot
 from collections import defaultdict
-from pprint import pprint
-import discord.utils
 
 BOT_PREFIX = ('!')
 bot = Bot(command_prefix=BOT_PREFIX)
@@ -15,8 +12,12 @@ async def on_ready():
     print(bot.user.name)
     print(bot.user.id)
     print('---------')
+
 @bot.event
-async
+async def on_message(message):
+    for member in bot.get_all_members():
+        print(member)
+
 
 @bot.command(name='addTally',
                 description="Adds a tally",
