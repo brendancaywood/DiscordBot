@@ -47,8 +47,7 @@ async def addTally(ctx, desUser: str, num: int):
                     num = 1
                 if uName.name + '#' + uName.discriminator in tallydict:
                     tallydict[uName.name + '#' + uName.discriminator] += num
-                    msg = desUser + ' now has ' + str(tallydict[uName.name + '#' + uName.discriminator]) + ' tallies.'
-                    await ctx.send(msg)
+                    await ctx.send(desUser + ' now has ' + str(tallydict[uName.name + '#' + uName.discriminator]) + ' tallies.')
                 else:
                     tallydict[uName.name + '#' + uName.discriminator] = num
                     await ctx.send(desUser + ' has recieved their first tally. They now have ' + str(tallydict[uName.name + '#' + uName.discriminator]) + ' tallies.')
