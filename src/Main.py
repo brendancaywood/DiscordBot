@@ -5,6 +5,8 @@ BOT_PREFIX = ('!')
 bot = Bot(command_prefix=BOT_PREFIX)
 tallydict = {}
 ownedGames = defaultdict(list)
+members = []
+usernameMemberDict = {}
 
 @bot.event
 async def on_ready():
@@ -15,8 +17,15 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
-    for member in bot.get_all_members():
-        print(member)
+    if message.content[0] == '!':
+        for member in bot.get_all_members():
+            if member not in members:
+                members.append(member)
+
+        for username in members:
+            usernameMemberDict[username] = username.nick
+
+        print(usernameMemberDict)
 
 
 @bot.command(name='addTally',
@@ -25,6 +34,8 @@ async def on_message(message):
                 aliases=['tally', 'addtally', 'Addtally'],
                 pass_context=True)
 async def addTally(ctx, desUser: str, num: int):
+    if num == None:
+        num = 1
     if desUser in tallydict:
         tallydict[desUser] += num
         msg = desUser + ' now has ' + str(tallydict[desUser]) + ' tallies.'
