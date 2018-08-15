@@ -7,6 +7,7 @@ tallydict = {}
 ownedGames = defaultdict(list)
 members = []
 usernameMemberDict = {}
+displaynameMemberDict = {}
 
 @bot.event
 async def on_ready():
@@ -15,17 +16,21 @@ async def on_ready():
     print(bot.user.id)
     print('---------')
 
-@bot.event
-async def on_message(message):
-    if message.content[0] == '!':
-        for member in bot.get_all_members():
-            if member not in members:
-                members.append(member)
 
-        for username in members:
+def userDict():
+    for member in bot.get_all_members():
+        if member not in members:
+            members.append(member)
+
+    for username in members:
+        if username.nick != None:
             usernameMemberDict[username] = username.nick
+        else:
+            usernameMemberDict[username] = username.name
 
-        print(usernameMemberDict)
+    for uName, dName in usernameMemberDict.items():
+        displaynameMemberDict[dName] = uName
+    print(displaynameMemberDict)
 
 
 @bot.command(name='addTally',
@@ -34,15 +39,19 @@ async def on_message(message):
                 aliases=['tally', 'addtally', 'Addtally'],
                 pass_context=True)
 async def addTally(ctx, desUser: str, num: int):
-    if num == None:
-        num = 1
-    if desUser in tallydict:
-        tallydict[desUser] += num
-        msg = desUser + ' now has ' + str(tallydict[desUser]) + ' tallies.'
-        await ctx.send(msg)
-    else:
-        tallydict[desUser] = num
-        await ctx.send(desUser + ' has recieved their first tally. They now have ' + str(tallydict[desUser]) + ' tallies.')
+    userDict()
+    if desUser in usernameMemberDict.values():
+        for dName, uName in displaynameMemberDict.items():
+            if dName == desUser:
+                if num == None:
+                    num = 1
+                if uName.name + '#' + uName.discriminator in tallydict:
+                    tallydict[uName.name + '#' + uName.discriminator] += num
+                    msg = desUser + ' now has ' + str(tallydict[uName.name + '#' + uName.discriminator]) + ' tallies.'
+                    await ctx.send(msg)
+                else:
+                    tallydict[uName.name + '#' + uName.discriminator] = num
+                    await ctx.send(desUser + ' has recieved their first tally. They now have ' + str(tallydict[uName.name + '#' + uName.discriminator]) + ' tallies.')
 
 @bot.command(name='addGame',
                 description="Adds a Game to you Library",
