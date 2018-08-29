@@ -130,13 +130,13 @@ async def gameUpdate(ctx):
     counter = 0
     for member in members:
         if member.name + '#' + member.discriminator in ownedGames:
-            if member.game not in ownedGames[member.member.name + '#' + member.discriminator]:
-                ownedGames[member.name + '#' + member.discriminator].append(member.game)
+            if member.game.name not in ownedGames[member.member.name + '#' + member.discriminator]:
+                ownedGames[member.name + '#' + member.discriminator].append(member.game.name)
                 gameList = ''.join(ownedGames[member.name + '#' + member.discriminator])
                 msg = member.nick + ' now has ' + gameList + 'games.'
                 await ctx.send(msg)
         else:
-            ownedGames[member.name + '#' + member.discriminator] = [member.game]
+            ownedGames[member.name + '#' + member.discriminator] = [member.game.name]
             gameList = ''.join(ownedGames[member.name + '#' + member.discriminator])
             await ctx.send(member.nick + ' has added their first game. They now have this ' + gameList + 'game.')
     await asyncio.sleep(60) # task runs every 60 seconds
