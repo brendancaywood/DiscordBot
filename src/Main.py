@@ -140,3 +140,5 @@ async def gameUpdate(ctx):
             gameList = ''.join(ownedGames[member.name + '#' + member.discriminator])
             await ctx.send(member.nick + ' has added their first game. They now have this ' + gameList + 'game.')
     await asyncio.sleep(60) # task runs every 60 seconds
+
+client.loop.create_task(gameUpdate())
