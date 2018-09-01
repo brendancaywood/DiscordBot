@@ -124,8 +124,6 @@ async def addGame(ctx, desUser: str, game: str):
                     ownedGames[uName.name + '#' + uName.discriminator] = [gameSp]
                     gameList = ''.join(ownedGames[uName.name + '#' + uName.discriminator])
                     await ctx.send(desUser + ' has added their first game. They now have this ' + gameList + 'game.')
-<<<<<<< HEAD
-=======
 
 async def gameUpdate(ctx):
     await client.wait_until_ready()
@@ -144,4 +142,5 @@ async def gameUpdate(ctx):
     await asyncio.sleep(60) # task runs every 60 seconds
 
 client.loop.create_task(gameUpdate())
->>>>>>> f11bb7b452359e4ae5ae558565fb8ec8ac3d944b
+bot.run('NDc4OTc0NjM2NTE2ODM1MzM4.DlSfyg.ZTiK0w1iXASZqNUyUKxuI1KKjbY')
+
