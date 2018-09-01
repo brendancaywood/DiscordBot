@@ -117,4 +117,3 @@ async def addGame(ctx, desUser: str, game: str):
                     ownedGames[uName.name + '#' + uName.discriminator] = [gameSp]
                     gameList = ''.join(ownedGames[uName.name + '#' + uName.discriminator])
                     await ctx.send(desUser + ' has added their first game. They now have this ' + gameList + 'game.')
-
