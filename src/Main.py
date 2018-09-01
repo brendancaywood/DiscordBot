@@ -85,7 +85,7 @@ async def addTally(ctx, desUser: str, num: int):
 @bot.command(name='getTallies',
                 description="Gets number of Tallies",
                 brief="git tallies",
-                aliases=['gettally', 'getTally', 'Gettally', 'getTallies'],
+                aliases=['gettally', 'getTally', 'Gettally'],
                 pass_context=True)
 async def getTallies(ctx, desUser: str):
     userDict()
