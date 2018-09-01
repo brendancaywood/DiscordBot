@@ -1,11 +1,16 @@
 from discord.ext.commands import Bot
 from collections import defaultdict
+import asyncio
+import discord
 
 #the prefix used to signify commands
 BOT_PREFIX = ('!')
 
 #the bot itself
 bot = Bot(command_prefix=BOT_PREFIX)
+
+#the client
+client = discord.Client()
 
 #dictionary used to hold the members and their number of tallies
 tallydict = {}
@@ -21,6 +26,8 @@ usernameMemberDict = {}
 
 #displayname matched with members
 displaynameMemberDict = {}
+
+
 
 """
 Runs at launch of the bot
@@ -93,9 +100,9 @@ async def getTallies(ctx, desUser: str):
         for dName, uName in displaynameMemberDict.items():
             if dName == desUser:
                 if uName.name + '#' + uName.discriminator in tallydict:
-                    print(desUser + ' has ' + tallydict(uName.name + '#' + uName.discriminator) + ' tallies.')
+                    await ctx.send(desUser + ' has ' + tallydict(uName.name + '#' + uName.discriminator) + ' tallies.')
                 else:
-                    print(desUser + ' has no tallies.')
+                    await ctx.send(desUser + ' has no tallies.')
 @bot.command(name='addGame',
                 description="Adds a Game to you Library",
                 brief="add your game",
@@ -117,3 +124,24 @@ async def addGame(ctx, desUser: str, game: str):
                     ownedGames[uName.name + '#' + uName.discriminator] = [gameSp]
                     gameList = ''.join(ownedGames[uName.name + '#' + uName.discriminator])
                     await ctx.send(desUser + ' has added their first game. They now have this ' + gameList + 'game.')
+<<<<<<< HEAD
+=======
+
+async def gameUpdate(ctx):
+    await client.wait_until_ready()
+    counter = 0
+    for member in members:
+        if member.name + '#' + member.discriminator in ownedGames:
+            if member.game.name not in ownedGames[member.member.name + '#' + member.discriminator]:
+                ownedGames[member.name + '#' + member.discriminator].append(member.game.name)
+                gameList = ''.join(ownedGames[member.name + '#' + member.discriminator])
+                msg = member.nick + ' now has ' + gameList + 'games.'
+                await ctx.send(msg)
+        else:
+            ownedGames[member.name + '#' + member.discriminator] = [member.game.name]
+            gameList = ''.join(ownedGames[member.name + '#' + member.discriminator])
+            await ctx.send(member.nick + ' has added their first game. They now have this ' + gameList + 'game.')
+    await asyncio.sleep(60) # task runs every 60 seconds
+
+client.loop.create_task(gameUpdate())
+>>>>>>> f11bb7b452359e4ae5ae558565fb8ec8ac3d944b
