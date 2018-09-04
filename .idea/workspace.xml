@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/Main.py" line="65" />
+    <bookmark url="file://$PROJECT_DIR$/src/Main.py" line="72" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="31553e04-c870-4031-a146-0a7fe54b23cd" name="Default Changelist" comment="" />
@@ -15,6 +15,7 @@
     <session id="770383417">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
+          <entry key="project.closed" value="1" />
           <entry key="project.open.time.11" value="1" />
           <entry key="project.open.time.4" value="2" />
           <entry key="project.open.time.5" value="1" />
@@ -50,11 +51,10 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="582">
-              <caret line="87" column="59" selection-start-line="87" selection-start-column="59" selection-end-line="87" selection-end-column="59" />
+            <state relative-caret-position="1007">
+              <caret line="139" column="23" selection-start-line="139" selection-start-column="23" selection-end-line="139" selection-end-column="23" />
               <folding>
-                <marker date="1535823339043" expanded="true" signature="599:604" ph="..." />
-                <marker date="1535823339043" expanded="true" signature="3076:3492" ph="..." />
+                <element signature="e#0#36#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -146,7 +146,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1273" y="0" width="1294" height="1407" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.34359807" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -190,11 +189,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="582">
-          <caret line="87" column="59" selection-start-line="87" selection-start-column="59" selection-end-line="87" selection-end-column="59" />
+        <state relative-caret-position="1007">
+          <caret line="139" column="23" selection-start-line="139" selection-start-column="23" selection-end-line="139" selection-end-column="23" />
           <folding>
-            <marker date="1535823339043" expanded="true" signature="599:604" ph="..." />
-            <marker date="1535823339043" expanded="true" signature="3076:3492" ph="..." />
+            <element signature="e#0#36#0" expanded="true" />
           </folding>
         </state>
       </provider>

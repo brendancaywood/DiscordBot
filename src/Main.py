@@ -125,7 +125,7 @@ async def addGame(ctx, desUser: str, game: str):
                     gameList = ''.join(ownedGames[uName.name + '#' + uName.discriminator])
                     await ctx.send(desUser + ' has added their first game. They now have this ' + gameList + 'game.')
 
-async def gameUpdate(ctx):
+async def gameUpdate():
     await client.wait_until_ready()
     counter = 0
     for member in members:
