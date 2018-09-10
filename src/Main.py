@@ -46,13 +46,6 @@ def userDict():
     for member in bot.get_all_members():
         if member not in members:
             members.append(member)
-    print(members)
-    for x in members:
-        print(x.name)
-        if x.game is not None:
-            print(x.game.name)
-        else:
-            print(x.game)
     # iterates through and links members to their nicknames(displaynames)
     for username in members:
         if username.nick is not None:
@@ -97,7 +90,7 @@ async def addTally(ctx, desUser: str, num: int):
                     await bot.send_message(bot.get_channel('478974569558966286'),desUser + ' has received their first tally. They now have ' + str(
                         tallydict[uName.name + '#' + uName.discriminator]) + ' tallies.')
     else:
-        await bot.send_message(bot.get_channel('478974569558966286'),"Please input a valid name(case sensitive)")
+        await bot.send_message(bot.get_channel('478974569558966286'), "Please input a valid name(case sensitive)")
 
 @bot.command(name='getTallies',
              description="Gets number of Tallies",
@@ -139,24 +132,25 @@ async def addGame(ctx, desUser: str, game: str):
                     gameList = ''.join(ownedGames[uName.name + '#' + uName.discriminator])
                     await ctx.send(desUser + ' has added their first game. They now have this ' + gameList + 'game.')
 
-"""
+
 async def gameUpdate():
     await bot.wait_until_ready()
     userDict()
     for member in members:
         print("1")
-        if member.name + '#' + member.discriminator in ownedGames:
-            if member.game.name not in ownedGames[member.member.name + '#' + member.discriminator]:
-                ownedGames[member.name + '#' + member.discriminator].append(member.game)
+        if member.game is not None:
+            if member.name + '#' + member.discriminator in ownedGames:
+                if member.game.name not in ownedGames[member.member.name + '#' + member.discriminator]:
+                    ownedGames[member.name + '#' + member.discriminator].append(member.game.name)
+                    gameList = ''.join(ownedGames[member.name + '#' + member.discriminator])
+                    msg = member.nick + ' now has ' + gameList + 'games.'
+                    await bot.send_message(bot.get_channel('478974569558966286'), msg)
+            else:
+                ownedGames[member.name + '#' + member.discriminator] = [member.game.name]
                 gameList = ''.join(ownedGames[member.name + '#' + member.discriminator])
-                msg = member.nick + ' now has ' + gameList + 'games.'
-                await bot.send_message(bot.get_channel('478974569558966286'), msg)
-        else:
-            ownedGames[member.name + '#' + member.discriminator] = [member.game]
-            gameList = ''.join(ownedGames[member.name + '#' + member.discriminator])
-            await bot.send_message(bot.get_channel('478974569558966286'), member.nick + ' has added their first game. They now have this ' + gameList + 'game.')
-    await asyncio.sleep(10)  # task runs every 60 seconds
-"""
+                await bot.send_message(bot.get_channel('478974569558966286'), member.nick + ' has added their first game. They now have this ' + member.game.name + ' game.')
+    await asyncio.sleep(1)  # task runs every 60 seconds
 
-#bot.loop.create_task(gameUpdate())
+
 bot.run('NDg2Njc1MzkwNzQ4Njg4NDA0.DnRVbw.47FGpcFcOP5Ff13TTyxGRPYlr98')
+bot.loop.create_task(gameUpdate())
