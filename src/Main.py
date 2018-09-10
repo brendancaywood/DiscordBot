@@ -1,113 +1,123 @@
 from discord.ext.commands import Bot
 from collections import defaultdict
 import asyncio
-import discord
+import discord.member
 
-#the prefix used to signify commands
-BOT_PREFIX = ('!')
+# the prefix used to signify commands
+BOT_PREFIX = '!'
 
-#the bot itself
+# the bot itself
 bot = Bot(command_prefix=BOT_PREFIX)
 
-#the client
-client = discord.Client()
-
-#dictionary used to hold the members and their number of tallies
+# dictionary used to hold the members and their number of tallies
 tallydict = {}
 
-#the list that holds the owned games for an individual user
+# the list that holds the owned games for an individual user
 ownedGames = defaultdict(list)
 
-#the list of members in the discord
+# the list of members in the discord
 members = []
 
-#members matched with their usernames
+# members matched with their usernames
 usernameMemberDict = {}
 
-#displayname matched with members
+# displayname matched with members
 displaynameMemberDict = {}
-
-
 
 """
 Runs at launch of the bot
 """
+
+
 @bot.event
 async def on_ready():
     print('Logged in as')
     print(bot.user.name)
     print(bot.user.id)
     print('---------')
+    userDict()
+
 
 """
 Used to make the displaynameMemberDict and also the usernameMemberDict
 """
-def userDict():
 
-    #iterates all members of the discords and adds them to a list
+
+def userDict():
+    # iterates all members of the discords and adds them to a list
     for member in bot.get_all_members():
         if member not in members:
             members.append(member)
-
-    #iterates through and links members to their nicknames(displaynames)
+    print(members)
+    for x in members:
+        print(x.name)
+        print(x.game)
+    # iterates through and links members to their nicknames(displaynames)
     for username in members:
-        if username.nick != None:
+        if username.nick is not None:
             usernameMemberDict[username] = username.nick
         else:
             usernameMemberDict[username] = username.name
-
-    #iterates through the members and nicknames and makes a dictionary of nicknames and their members
+    # iterates through the members and nicknames and makes a dictionary of nicknames and their members
     for uName, dName in usernameMemberDict.items():
         displaynameMemberDict[dName] = uName
+
 
 """
 Command used to add tallies to a Member
 @param desUser str the desired nickname to add the tally(s) to
 @param num int the number of tallies to add to the member
 """
+
+
 @bot.command(name='addTally',
-                description="Adds a tally",
-                brief="git roasted",
-                aliases=['tally', 'addtally', 'Addtally'],
-                pass_context=True)
+             description="Adds a tally",
+             brief="git roasted",
+             aliases=['tally', 'addtally', 'Addtally'],
+             pass_context=True)
 async def addTally(ctx, desUser: str, num: int):
-    #updates each of the user dictionaries for the latest values
+    # updates each of the user dictionaries for the latest values
     userDict()
 
-    #check if the given nickname exists in the list of nicknames
+    # check if the given nickname exists in the list of nicknames
     if desUser in usernameMemberDict.values():
 
-        #grabs the key value combo from the displayname dictionary
+        # grabs the key value combo from the displayname dictionary
         for dName, uName in displaynameMemberDict.items():
             if dName == desUser:
                 if num == None:
                     num = 1
                 if uName.name + '#' + uName.discriminator in tallydict:
                     tallydict[uName.name + '#' + uName.discriminator] += num
-                    await ctx.send(desUser + ' now has ' + str(tallydict[uName.name + '#' + uName.discriminator]) + ' tallies.')
+                    await bot.send_message(bot.get_channel('478974569558966286'),desUser + ' now has ' + str(tallydict[uName.name + '#' + uName.discriminator]) + ' tallies.')
                 else:
                     tallydict[uName.name + '#' + uName.discriminator] = num
-                    await ctx.send(desUser + ' has recieved their first tally. They now have ' + str(tallydict[uName.name + '#' + uName.discriminator]) + ' tallies.')
-
+                    await bot.send_message(bot.get_channel('478974569558966286'),desUser + ' has received their first tally. They now have ' + str(
+                        tallydict[uName.name + '#' + uName.discriminator]) + ' tallies.')
+    else:
+        await bot.send_message(bot.get_channel('478974569558966286'),"Please input a valid name")
+        
 @bot.command(name='getTallies',
-                description="Gets number of Tallies",
-                brief="git tallies",
-                aliases=['gettally', 'getTally', 'Gettally'],
-                pass_context=True)
+             description="Gets number of Tallies",
+             brief="git tallies",
+             aliases=['gettally', 'getTally', 'Gettally'],
+             pass_context=True)
 async def getTallies(ctx, desUser: str):
     userDict()
     if desUser in usernameMemberDict.values():
         for dName, uName in displaynameMemberDict.items():
             if dName == desUser:
                 if uName.name + '#' + uName.discriminator in tallydict:
-                    await ctx.send(desUser + ' has ' + tallydict(uName.name + '#' + uName.discriminator) + ' tallies.')
+                    await ctx.send(desUser + ' has ' + tallydict[uName.name + '#' + uName.discriminator] + ' tallies.')
                 else:
                     await ctx.send(desUser + ' has no tallies.')
+
+
 @bot.command(name='addGame',
-                description="Adds a Game to you Library",
-                brief="add your game",
-                aliases=['addgame', 'ADDGAME', 'Addgame'],
-                pass_context=True)
+             description="Adds a Game to you Library",
+             brief="add your game",
+             aliases=['addgame', 'ADDGAME', 'Addgame'],
+             pass_context=True)
 async def addGame(ctx, desUser: str, game: str):
     userDict()
     if desUser in usernameMemberDict.values():
@@ -125,8 +135,10 @@ async def addGame(ctx, desUser: str, game: str):
                     gameList = ''.join(ownedGames[uName.name + '#' + uName.discriminator])
                     await ctx.send(desUser + ' has added their first game. They now have this ' + gameList + 'game.')
 
+"""
 async def gameUpdate():
-    await client.wait_until_ready()
+    await bot.wait_until_ready()
+    userDict()
     counter = 0
     for member in members:
         if member.name + '#' + member.discriminator in ownedGames:
@@ -134,13 +146,12 @@ async def gameUpdate():
                 ownedGames[member.name + '#' + member.discriminator].append(member.game.name)
                 gameList = ''.join(ownedGames[member.name + '#' + member.discriminator])
                 msg = member.nick + ' now has ' + gameList + 'games.'
-                await ctx.send(msg)
+                await bot.send(msg)
         else:
             ownedGames[member.name + '#' + member.discriminator] = [member.game.name]
             gameList = ''.join(ownedGames[member.name + '#' + member.discriminator])
-            await ctx.send(member.nick + ' has added their first game. They now have this ' + gameList + 'game.')
-    await asyncio.sleep(60) # task runs every 60 seconds
+            await bot.send(member.nick + ' has added their first game. They now have this ' + gameList + 'game.')
+    await asyncio.sleep(60)  # task runs every 60 seconds
+"""
 
-client.loop.create_task(gameUpdate())
-bot.run('NDc4OTc0NjM2NTE2ODM1MzM4.DlSfyg.ZTiK0w1iXASZqNUyUKxuI1KKjbY')
-
+#bot.loop.create_task(gameUpdate())
