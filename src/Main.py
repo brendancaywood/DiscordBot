@@ -152,5 +152,4 @@ async def gameUpdate():
     await asyncio.sleep(1)  # task runs every 60 seconds
 
 
-bot.run('NDg2Njc1MzkwNzQ4Njg4NDA0.DnRVbw.47FGpcFcOP5Ff13TTyxGRPYlr98')
 bot.loop.create_task(gameUpdate())
