@@ -76,7 +76,7 @@ Command used to add tallies to a Member
              brief="git roasted",
              aliases=['tally', 'addtally', 'Addtally'],
              pass_context=True)
-async def addTally(ctx, desUser: str, num: int):
+async def addTally(ctx, desUser: str, num: int = 1):
     # updates each of the user dictionaries for the latest values
     userDict()
 
@@ -141,20 +141,21 @@ Command used to manually add a game to a member
 async def addGame(ctx, desUser: str, game: str):
     # gets updated list of members and their related usernames/nicknames
     userDict()
-    if desUser in usernameMemberDict.values():
-        for dName, uName in displaynameMemberDict.items():
-            if dName == desUser:
-                if uName.name + '#' + uName.discriminator in ownedGames:
-                    gameSp = game + " "
-                    ownedGames[uName.name + '#' + uName.discriminator].append(gameSp)
-                    gameList = ''.join(ownedGames[uName.name + '#' + uName.discriminator])
-                    msg = desUser + ' now has ' + gameList + 'games.'
-                    await ctx.send(msg)
-                else:
-                    gameSp = game + " "
-                    ownedGames[uName.name + '#' + uName.discriminator] = [gameSp]
-                    gameList = ''.join(ownedGames[uName.name + '#' + uName.discriminator])
-                    await ctx.send(desUser + ' has added their first game. They now have this ' + gameList + 'game.')
+    if game is not None:
+        if desUser in usernameMemberDict.values():
+            for dName, uName in displaynameMemberDict.items():
+                if dName == desUser:
+                    if uName.name + '#' + uName.discriminator in ownedGames:
+                        gameSp = game + " "
+                        ownedGames[uName.name + '#' + uName.discriminator].append(gameSp)
+                        gameList = ''.join(ownedGames[uName.name + '#' + uName.discriminator])
+                        msg = desUser + ' now has ' + gameList + 'games.'
+                        await ctx.send(msg)
+                    else:
+                        gameSp = game + " "
+                        ownedGames[uName.name + '#' + uName.discriminator] = [gameSp]
+                        gameList = ''.join(ownedGames[uName.name + '#' + uName.discriminator])
+                        await ctx.send(desUser + ' has added their first game. They now have this ' + gameList + 'game.')
 
 """
 Automatic task used to grab what games each user is playing
