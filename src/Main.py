@@ -1,8 +1,12 @@
 from discord.ext.commands import Bot
 from collections import defaultdict
 import asyncio
-import discord.member
 
+"""
+A discord bot with various different purposes
+
+@author Brendan Caywood
+"""
 # the prefix used to signify commands
 BOT_PREFIX = '!'
 
@@ -35,12 +39,15 @@ async def on_ready():
     print(bot.user.name)
     print(bot.user.id)
     print('---------')
+    #gets updated list of members and their related usernames/nicknames
     userDict()
 
 
 """
 Used to make the displaynameMemberDict and also the usernameMemberDict
 """
+
+
 def userDict():
     # iterates all members of the discords and adds them to a list
     for member in bot.get_all_members():
@@ -79,18 +86,27 @@ async def addTally(ctx, desUser: str, num: int):
         # grabs the key value combo from the displayname dictionary
         for dName, uName in displaynameMemberDict.items():
 
+            # figures out the correct displayname from the list
             if dName == desUser:
                 if num == None:
                     num = 1
                 if uName.name + '#' + uName.discriminator in tallydict:
                     tallydict[uName.name + '#' + uName.discriminator] += num
-                    await bot.send_message(bot.get_channel('478974569558966286'),desUser + ' now has ' + str(tallydict[uName.name + '#' + uName.discriminator]) + ' tallies.')
+                    await bot.send_message(bot.get_channel('478974569558966286'), desUser + ' now has ' + str(
+                        tallydict[uName.name + '#' + uName.discriminator]) + ' tallies.')
                 else:
                     tallydict[uName.name + '#' + uName.discriminator] = num
-                    await bot.send_message(bot.get_channel('478974569558966286'),desUser + ' has received their first tally. They now have ' + str(
-                        tallydict[uName.name + '#' + uName.discriminator]) + ' tallies.')
+                    await bot.send_message(bot.get_channel('478974569558966286'),
+                                           desUser + ' has received their first tally. They now have ' + str(
+                                               tallydict[uName.name + '#' + uName.discriminator]) + ' tallies.')
     else:
         await bot.send_message(bot.get_channel('478974569558966286'), "Please input a valid name(case sensitive)")
+
+"""
+Command used to get the number of tallies for a Member
+@param desUser str the desired nickname to get the tally(s) from
+"""
+
 
 @bot.command(name='getTallies',
              description="Gets number of Tallies",
@@ -98,6 +114,7 @@ async def addTally(ctx, desUser: str, num: int):
              aliases=['gettally', 'getTally', 'Gettally'],
              pass_context=True)
 async def getTallies(ctx, desUser: str):
+    # gets updated list of members and their related usernames/nicknames
     userDict()
     if desUser in usernameMemberDict.values():
         for dName, uName in displaynameMemberDict.items():
@@ -109,6 +126,12 @@ async def getTallies(ctx, desUser: str):
     else:
         await bot.send_message(bot.get_channel('478974569558966286'), "Please input a valid name(case sensitive)")
 
+"""
+Command used to manually add a game to a member
+@param desUser str the desired nickname to add the game(s) to
+@param game str the game to add to the member
+"""
+
 
 @bot.command(name='addGame',
              description="Adds a Game to you Library",
@@ -116,6 +139,7 @@ async def getTallies(ctx, desUser: str):
              aliases=['addgame', 'ADDGAME', 'Addgame'],
              pass_context=True)
 async def addGame(ctx, desUser: str, game: str):
+    # gets updated list of members and their related usernames/nicknames
     userDict()
     if desUser in usernameMemberDict.values():
         for dName, uName in displaynameMemberDict.items():
@@ -132,9 +156,15 @@ async def addGame(ctx, desUser: str, game: str):
                     gameList = ''.join(ownedGames[uName.name + '#' + uName.discriminator])
                     await ctx.send(desUser + ' has added their first game. They now have this ' + gameList + 'game.')
 
+"""
+Automatic task used to grab what games each user is playing
+and add it to their list of games if applicable
+"""
+
 
 async def gameUpdate():
     await bot.wait_until_ready()
+    # gets updated list of members and their related usernames/nicknames
     userDict()
     for member in members:
         print("1")
@@ -148,7 +178,8 @@ async def gameUpdate():
             else:
                 ownedGames[member.name + '#' + member.discriminator] = [member.game.name]
                 gameList = ''.join(ownedGames[member.name + '#' + member.discriminator])
-                await bot.send_message(bot.get_channel('478974569558966286'), member.nick + ' has added their first game. They now have this ' + member.game.name + ' game.')
+                await bot.send_message(bot.get_channel('478974569558966286'),
+                                       member.nick + ' has added their first game. They now have this ' + member.game.name + ' game.')
     await asyncio.sleep(1)  # task runs every 60 seconds
 
 
