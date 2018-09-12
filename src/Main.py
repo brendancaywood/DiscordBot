@@ -200,18 +200,19 @@ async def gameUpdate():
     userDict()
     for member in members:
         print("1")
+        if member.nick is None:
+            member.nick = member.name
         if member.game is not None:
             if member.name + '#' + member.discriminator in ownedGames:
-                if member.game.name not in ownedGames[member.member.name + '#' + member.discriminator]:
+                if member.game.name not in ownedGames[member.name + '#' + member.discriminator]:
                     ownedGames[member.name + '#' + member.discriminator].append(member.game.name)
                     gameList = ''.join(ownedGames[member.name + '#' + member.discriminator])
-                    msg = member.nick + ' now has ' + gameList + 'games.'
+                    msg = member.nick + ' now has these games: ' + gameList
                     await bot.send_message(bot.get_channel('478974569558966286'), msg)
             else:
-                ownedGames[member.name + '#' + member.discriminator] = [member.game.name]
+                ownedGames[member.name + '#' + member.discriminator] = str(member.game.name)
                 gameList = ''.join(ownedGames[member.name + '#' + member.discriminator])
-                await bot.send_message(bot.get_channel('478974569558966286'),
-                                       member.nick + ' has added their first game. They now have this ' + ownedGames[member.name + '#' + member.discriminator] + ' game.')
+                await bot.send_message(bot.get_channel('478974569558966286'), member.nick + ' has added their first game. They now have this ' + gameList + ' game.')
     await asyncio.sleep(10)  # task runs every 60 seconds
 
 
