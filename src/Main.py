@@ -28,6 +28,12 @@ usernameMemberDict = {}
 # displayname matched with members
 displaynameMemberDict = {}
 
+#List of games
+games = []
+
+#the current server of the bot
+server = bot.get_server()
+
 """
 Runs at launch of the bot
 """
@@ -193,7 +199,7 @@ and add it to their list of games if applicable
 """
 
 
-async def gameUpdate():
+async def userGameUpdate():
     await bot.wait_until_ready()
     while not bot.is_closed:
         print("Checking for new games...")
@@ -210,7 +216,7 @@ async def gameUpdate():
 
             # see if they are playing a game
             if member.game is not None:
-
+                rolesUpdate(member.game.name)
                 # check if they already have a game
                 if member.name + '#' + member.discriminator in ownedGames:
 
@@ -226,4 +232,12 @@ async def gameUpdate():
                     await bot.send_message(bot.get_channel('478974569558966286'), member.nick + ' has added their first game. They now have this ' + gameList + ' game.')
         await asyncio.sleep(60)  # task runs every 60 seconds
 
-bot.loop.create_task(gameUpdate())
+"""
+Checks if anyone is playing a game that currently isn't listed
+"""
+def rolesUpdate(name):
+    print(server.roles)
+    if name not in games:
+        games.append(name)
+
+bot.loop.create_task(userGameUpdate())
