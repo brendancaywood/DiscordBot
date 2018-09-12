@@ -122,9 +122,9 @@ async def getTallies(ctx, desUser: str):
         for dName, uName in displaynameMemberDict.items():
             if dName == desUser:
                 if uName.name + '#' + uName.discriminator in tallydict:
-                    await ctx.send(desUser + ' has ' + tallydict[uName.name + '#' + uName.discriminator] + ' tallies.')
+                    await bot.send_message(bot.get_channel('478974569558966286'), desUser + ' has ' + str(tallydict[uName.name + '#' + uName.discriminator]) + ' tallies.')
                 else:
-                    await ctx.send(desUser + ' has no tallies.')
+                    await bot.send_message(bot.get_channel('478974569558966286'), desUser + ' has no tallies.')
     else:
         await bot.send_message(bot.get_channel('478974569558966286'), "Please input a valid name(case sensitive)")
 
@@ -153,13 +153,13 @@ async def addGame(ctx, desUser: str, game: str):
                         ownedGames[uName.name + '#' + uName.discriminator].append(gameSp)
                         gameList = ''.join(ownedGames[uName.name + '#' + uName.discriminator])
                         msg = desUser + ' now has ' + gameList + 'games.'
-                        # TODO:await ctx.send(msg)
+                        await bot.send_message(bot.get_channel('478974569558966286'), msg)
 
                     else:
                         gameSp = game + " "
                         ownedGames[uName.name + '#' + uName.discriminator] = [gameSp]
                         gameList = ''.join(ownedGames[uName.name + '#' + uName.discriminator])
-                        # TODO: await ctx.send(desUser + ' has added their first game. They now have this ' + gameList + 'game.')
+                        await bot.send_message(bot.get_channel('478974569558966286'), desUser + ' has added their first game. They now have this ' + gameList + 'game.')
         else:
             await bot.send_message(bot.get_channel('478974569558966286'), "Please input a valid name(case sensitive)")
 
@@ -181,9 +181,9 @@ async def getGames(ctx, desUser: str):
         for dName, uName in displaynameMemberDict.items():
             if dName == desUser:
                 if uName.name + '#' + uName.discriminator in ownedGames:
-                    await ctx.send(desUser + ' has these games: ' + ownedGames[uName.name + '#' + uName.discriminator])
+                    await bot.send_message(bot.get_channel('478974569558966286'), desUser + ' has these games: ' + ownedGames[uName.name + '#' + uName.discriminator])
                 else:
-                    await ctx.send(desUser + ' has no games.')
+                    await bot.send_message(bot.get_channel('478974569558966286'), desUser + ' has no games.')
     else:
         await bot.send_message(bot.get_channel('478974569558966286'), "Please input a valid name(case sensitive)")
 
@@ -198,14 +198,24 @@ async def gameUpdate():
 
     # gets updated list of members and their related usernames/nicknames
     userDict()
+
+    # loops through and grabs each member
     for member in members:
         print("1")
+
+        # checks if nickname is nothing, if it is set it to normal name
         if member.nick is None:
             member.nick = member.name
+
+        # see if they are playing a game
         if member.game is not None:
+
+            # check if they already have a game
             if member.name + '#' + member.discriminator in ownedGames:
+
+                # if the game hasn't already been added
                 if member.game.name not in ownedGames[member.name + '#' + member.discriminator]:
-                    ownedGames[member.name + '#' + member.discriminator].append(member.game.name)
+                    ownedGames[member.name + '#' + member.discriminator].append(str(member.game.name))
                     gameList = ''.join(ownedGames[member.name + '#' + member.discriminator])
                     msg = member.nick + ' now has these games: ' + gameList
                     await bot.send_message(bot.get_channel('478974569558966286'), msg)
