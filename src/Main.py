@@ -42,6 +42,8 @@ async def on_ready():
     #gets updated list of members and their related usernames/nicknames
     userDict()
 
+    bot.loop.create_task(gameUpdate())
+
 
 """
 Used to make the displaynameMemberDict and also the usernameMemberDict
@@ -141,7 +143,8 @@ Command used to manually add a game to a member
 async def addGame(ctx, desUser: str, game: str):
     # gets updated list of members and their related usernames/nicknames
     userDict()
-    if game is not None:
+
+    if game is not None and desUser is not None:
         if desUser in usernameMemberDict.values():
             for dName, uName in displaynameMemberDict.items():
                 if dName == desUser:
@@ -150,12 +153,40 @@ async def addGame(ctx, desUser: str, game: str):
                         ownedGames[uName.name + '#' + uName.discriminator].append(gameSp)
                         gameList = ''.join(ownedGames[uName.name + '#' + uName.discriminator])
                         msg = desUser + ' now has ' + gameList + 'games.'
-                        await ctx.send(msg)
+                        # TODO:await ctx.send(msg)
+
                     else:
                         gameSp = game + " "
                         ownedGames[uName.name + '#' + uName.discriminator] = [gameSp]
                         gameList = ''.join(ownedGames[uName.name + '#' + uName.discriminator])
-                        await ctx.send(desUser + ' has added their first game. They now have this ' + gameList + 'game.')
+                        # TODO: await ctx.send(desUser + ' has added their first game. They now have this ' + gameList + 'game.')
+        else:
+            await bot.send_message(bot.get_channel('478974569558966286'), "Please input a valid name(case sensitive)")
+
+"""
+Command used to get the number of tallies for a Member
+@param desUser str the desired nickname to get the tally(s) from
+"""
+
+
+@bot.command(name='getGames',
+             description="Gets the list of games",
+             brief="git games",
+             aliases=['getgame', 'getGame', 'Getgame', 'getgames'],
+             pass_context=True)
+async def getGames(ctx, desUser: str):
+    # gets updated list of members and their related usernames/nicknames
+    userDict()
+    if desUser in usernameMemberDict.values():
+        for dName, uName in displaynameMemberDict.items():
+            if dName == desUser:
+                if uName.name + '#' + uName.discriminator in ownedGames:
+                    await ctx.send(desUser + ' has these games: ' + ownedGames[uName.name + '#' + uName.discriminator])
+                else:
+                    await ctx.send(desUser + ' has no games.')
+    else:
+        await bot.send_message(bot.get_channel('478974569558966286'), "Please input a valid name(case sensitive)")
+
 
 """
 Automatic task used to grab what games each user is playing
@@ -164,7 +195,7 @@ and add it to their list of games if applicable
 
 
 async def gameUpdate():
-    await bot.wait_until_ready()
+
     # gets updated list of members and their related usernames/nicknames
     userDict()
     for member in members:
@@ -180,8 +211,7 @@ async def gameUpdate():
                 ownedGames[member.name + '#' + member.discriminator] = [member.game.name]
                 gameList = ''.join(ownedGames[member.name + '#' + member.discriminator])
                 await bot.send_message(bot.get_channel('478974569558966286'),
-                                       member.nick + ' has added their first game. They now have this ' + member.game.name + ' game.')
-    await asyncio.sleep(1)  # task runs every 60 seconds
+                                       member.nick + ' has added their first game. They now have this ' + ownedGames[member.name + '#' + member.discriminator] + ' game.')
+    await asyncio.sleep(10)  # task runs every 60 seconds
 
 
-bot.loop.create_task(gameUpdate())
