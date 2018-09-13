@@ -28,11 +28,10 @@ usernameMemberDict = {}
 # displayname matched with members
 displaynameMemberDict = {}
 
-#List of games
-games = []
+#List of games and their roles
+gameRoles = {}
 
 #the current server of the bot
-server = bot.get_server()
 
 """
 Runs at launch of the bot
@@ -47,6 +46,9 @@ async def on_ready():
     print('---------')
     #gets updated list of members and their related usernames/nicknames
     userDict()
+    servers = bot.servers
+    for server in servers:
+        print(server)
 
 
 
@@ -236,8 +238,7 @@ async def userGameUpdate():
 Checks if anyone is playing a game that currently isn't listed
 """
 def rolesUpdate(name):
-    print(server.roles)
-    if name not in games:
-        games.append(name)
-
+    if name not in gameRoles:
+        print('test')
+#TODO: move to a start command
 bot.loop.create_task(userGameUpdate())
